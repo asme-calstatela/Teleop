@@ -1,0 +1,22 @@
+<launch>
+	
+		<!-- Launches the Arduino differential drive ROS node -->
+    <!-- Baud 57600 is used to ensure compatibility between arduino and PC -->
+    <node pkg="rosserial_python" type="serial_node.py" name="serial_node1">
+        <param name="port" value="/dev/ttyACM0"/>
+        <param name="baud" value="57600"/>
+    </node> 
+ 		<!-- Launches the Arduino Tilt Mechanism ROS node -->
+    <!-- Baud 57600 is used to ensure compatibility between arduino and PC -->
+    <node pkg="rosserial_python" type="serial_node.py" name="serial_node2">
+        <param name="port" value="/dev/ttyACM1"/>
+        <param name="baud" value="57600"/>
+    </node> 
+
+
+		<!-- Node for Kinect Bridge -->
+    <node pkg="kinect2_bridge" type="kinect2_bridge" name="kinect2_bridge">
+    </node>
+
+
+</launch>

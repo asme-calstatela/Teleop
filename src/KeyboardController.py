@@ -24,6 +24,9 @@ class KeyboardController(object):
     def set_vels(self, command):
         self.twist.angular.z = self.key_mapping[command][0]
         self.twist.linear.x  = self.key_mapping[command][1]
+	self.twist.linear.z  = self.key_mapping[command][2]
+
+
 
     def keys_cb(self, msg, twist_pub):
         if (len(msg.data) ==0):
@@ -31,6 +34,7 @@ class KeyboardController(object):
         vels = self.key_mapping[msg.data[0]]
         self.last_twist.angular.z = vels[0]
         self.last_twist.linear.x  = vels[1]
+	self.last_twist.linear.z  = vels[2]
         self.twist_pub(self.last_twist)
 
     def twist_pub(self, twist):

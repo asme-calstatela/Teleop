@@ -31,9 +31,9 @@ from KeyboardController import KeyboardController
 
 if __name__ == '__main__':
     rospy.init_node('keys_to_twist')
-    key_mapping = { 'w': [0, 1],  'x': [0, -1],
-                    'a': [-1, 0], 'd': [1, 0],
-                    's': [0, 0]  }
+    key_mapping = { 'w': [0, 1,0],  'x': [0, -1,0],
+                    'a': [-1, 0,0], 'd': [1, 0,0],
+                    's': [0, 0,0], 'p':[0,0,1], 'k':[0,0,-2],'l':[0,0,2], 'n':[0,0,-3],'m':[0,0,3],}
     vel_scales = [1, 1]
     cmd_topic = 'cmd_vel'
     keys_topic = 'keys'

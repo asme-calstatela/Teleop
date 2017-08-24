@@ -1,0 +1,28 @@
+<launch>
+		<export ROS_MASTER_URI='http://192.168.1.193:11311'>
+		<export ROS_IP=192.168.1.197> <!-- The address might be different so do hostname -I on your computer--!>
+			
+		<node name="image_view" pkg="image_view" type="image_view" respawn="false" output="screen">
+				<remap from="image" to="/kinect2/qhd/image_color_rect" />
+				<param name="~image_transport" value="compressed" />
+		</node>
+
+
+    <!-- Launches the key stroke publisher and a new xterm to type in -->
+    <node
+        pkg="teleop"
+        type="teleop_joy.py"
+        name="joystick_driver"
+    />
+
+    <!-- Launches the key to twist publisher -->
+    <!-- joy node -->
+    <node respawn="true" pkg="joy"
+        type="joy_node" name="turtle_joy" >
+        <param name="dev" type="string" value="/dev/input/js0" />
+        <param name="deadzone" value="0.12" />
+    </node>
+
+		
+
+</launch>
