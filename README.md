@@ -13,6 +13,9 @@ To install `joy` run `sudo apt-get install ros-indigo-joy` or clone the [joy rep
 ### [rosserial](http://wiki.ros.org/rosserial "ROS rosserial package")
 This uses `rosserial`, specifically [`rosserial_arduino`](http://wiki.ros.org/rosserial_arduino "ROS rosserial_arduino package"). This should not require any installation on your part as it comes with the full installation of ROS.
 
+### [Kinect](https://github.com/code-iai/iai_kinect2)
+The link attached details instructions on how to install the kinect package and the neccessary steps.
+
 ## Running It (OLD WAY)
 It is recommended that the package be run via `launch` files, although it is possible to run each node individually. However, sometimes it *is* useful to run a node individually due to a connection problem with the Arduino, for example.
 
