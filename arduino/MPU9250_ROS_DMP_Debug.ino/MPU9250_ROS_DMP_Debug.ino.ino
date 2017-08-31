@@ -1,15 +1,5 @@
-
-/*
- * These are the Arduino headers to read IMU values using I2C protocoal.
- * It also include Arduino - MPU 9150 headers for performing special functions.
- * Code obtained from the  "ROS Robotics Projects" by: Lentin Joseph GITHUB Repo
- * https://github.com/PacktPublishing/ROS-Robotics-Projects/blob/master/Chapter05/MPU9250_ROS_DMP/MPU9250_ROS_DMP_Debug.ino
- * 
- * Modified By: Francisco Moxo 08/01/2017 
- * Change Delay to 1 millisecond
-*/
-
-
+// These are the Arduino headers to read IMU values using I2C protocoal. 
+//It also include Arduino - MPU 9150 headers for performing special functions.
 
 #include "Wire.h"
 #include "I2Cdev.h"
@@ -188,11 +178,12 @@ void loop() {
             nh.spinOnce();
    
 
-            delay(1);
+            delay(200);
           
             // blink LED to indicate activity
             blinkState = !blinkState;
             digitalWrite(LED_PIN, blinkState);
-            delay(1);
+            delay(200);
     }
 }
+
