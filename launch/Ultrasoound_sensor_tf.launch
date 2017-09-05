@@ -1,0 +1,15 @@
+<launch>
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFL1_tf" args="1 1 0 1.5708 0 0 base_link USFL1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFL2_tf" args="1 1 0 0.79698 0 0 base_link USFL2" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFR1_tf" args="1 -1 0 -0.79698 0 0 base_link USFR1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFR2_tf" args="1 -1 0 -1.5708 0 0 base_link USFR2" />
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="USBL1_tf" args="-1 1 0 1.5708 0 0 base_link USBL1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USBL2_tf" args="-1 1 0 2.35619 0 0 base_link USBL2" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USSB1_tf" args="-1 -1 0 -2.35619 0 0 base_link USBR1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFB2_tf" args="-1 -1 0 -1.5708 0 0 base_link USBR2" />
+
+
+
+</launch>
