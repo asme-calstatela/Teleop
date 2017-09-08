@@ -10,6 +10,12 @@
 <node pkg="tf2_ros" type="static_transform_publisher" name="USSB1_tf" args="-1 -1 0 -2.35619 0 0 base_link USBR1" />
 <node pkg="tf2_ros" type="static_transform_publisher" name="USFB2_tf" args="-1 -1 0 -1.5708 0 0 base_link USBR2" />
 
+<!-- Launches the Arduino Ultra sound sensor(s) node -->
+		 <!-- Baud 57600 is used to ensure compatibility between arduino and PC -->
+    			<node pkg="rosserial_python" type="serial_node.py" name="serial_node1">
+        		<param name="port" value="/dev/ttyACM0"/>
+        		<param name="baud" value="57600"/>
+    			</node> 
 
 
 </launch>
