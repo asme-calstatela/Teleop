@@ -64,7 +64,7 @@
 #include <geometry_msgs/Twist.h>
 
 #include <Encoder.h> // Added this line 11/1/17
-#include <std_msgs/Float64.h> //Added this line 12/28/17
+#include <std_msgs/Float32.h> //Added this line 12/28/17
 
 ros::NodeHandle  nh;
 
@@ -120,8 +120,8 @@ void servo_cb(const geometry_msgs::Twist& cmd_msg){
 
 ros::Subscriber<geometry_msgs::Twist> sub_cmd_vel("cmd_vel", servo_cb); // Topic used to be "cmd_vel". New topic is "cmd_vel"ard"
 
-std_msgs::Float64 left_msg; // This instantiates the publisher string
-std_msgs::Float64 right_msg; 
+std_msgs::Float32 left_msg; // This instantiates the publisher string
+std_msgs::Float32 right_msg; 
 ros::Publisher left_count( "/left_enc_ticks", &left_msg); // 
 ros::Publisher right_count("/right_enc_ticks", &right_msg);
 
@@ -148,10 +148,14 @@ void loop(){
   if (newPosition_left != oldPosition_left && newPosition_right != oldPosition_right) {  // Added this line 11/1/17
     oldPosition_left = newPosition_left;   // Added this line 11/1/17
     oldPosition_right = newPosition_right;
+    
     left_msg.data = newPosition_left;
     right_msg.data = newPosition_right;
+    
     left_count.publish( &left_msg);
     right_count.publish( &right_msg);
+
+    delay(30);
     
   }
  digitalWrite(TRAN, HIGH); //Activating the relay to diesngage the breaks
