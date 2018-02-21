@@ -19,7 +19,7 @@
  * www.ros.org/wiki/rosserial_arduino_demos
  * It also sends out information about encoder counts (DC motors coupled with optical encoders) to be used for odometry calculation.
  *
- * Input: geometry_msgs/Twist cmd_msg that corresponds to
+ * Input: geometry_msgs/Twist cmd_msg that corresponds to=
  *        commands to send the differential drive robot
  *
  * Output: Movement based on the geometry_msgs/Twist commands
@@ -70,7 +70,7 @@ ros::NodeHandle  nh;
 
 
 const float STOP = 90;  // The stopping point for the servos is 90 degrees
-const float LEFT_SCALE = 0.0987; // Original value 15. Higher value, lower speed. Lower value, higher speed.
+const float LEFT_SCALE = 0.1757; // Original value 15. Higher value, lower speed. Lower value, higher speed.
 const float RIGHT_SCALE = 0.1556; // Original value 15
 const float THRESHOLD = 0.01;
 int TRAN = 11; // Sending a signal to the transistor/relay
