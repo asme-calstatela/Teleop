@@ -9,7 +9,7 @@
 	
 		<!-- Node for Kinect Bridge -->
     <node pkg="kinect2_bridge" type="kinect2_bridge" name="kinect2_bridge">
-    < /node >
+    </node>
 
 
 </launch>
