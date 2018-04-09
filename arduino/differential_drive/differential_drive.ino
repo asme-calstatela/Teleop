@@ -60,8 +60,8 @@
 ros::NodeHandle  nh;
 
 const float STOP = 90;  // The stopping point for the servos is 90 degrees
-const float LEFT_SCALE = 0.0787; // Original value 15. Higher value, lower speed. Lower value, higher speed.
-const float RIGHT_SCALE = 0.1556; // Original value 15
+const float LEFT_SCALE = 0.0888; // Original value 15. Higher value, lower speed. Lower value, higher speed.
+const float RIGHT_SCALE = 0.1540; // Original value 15
 const float THRESHOLD = 0.01;
 int TRAN = 11; // Sending a signal to the transistor/relay
 
