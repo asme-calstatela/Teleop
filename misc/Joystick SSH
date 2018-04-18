@@ -1,0 +1,39 @@
+## Window 1
+
+ssh teleoperation@teleoperation
+
+hostname -I
+
+export ROS_IP=192.168.1.193
+
+source teleop1/devel/setup.bash 
+
+roslaunch teleop teleop_joy_server_Kinect.launch 
+
+## WIndow 2
+export ROS_MASTER_URI='http://192.168.1.193:11311' 
+
+hostname -I
+
+export ROS_IP=192.168.1.197
+
+source teleop2/devel/setup.bash 
+
+roslaunch teleop teleop_joy_client_Kinect.launch
+
+-------------------------------------------------NEW WAY---------------------------------------------
+## Window 1
+$ ssh teleoperation@teleoperation
+
+$ source name_of_working_directory/devel/setup.bash
+
+$ cd name_of_working_directory/src/teleop/misc
+
+$ ./teleop_joy_server_Kinect.sh
+
+## Window 2
+$ source name_of_working_drectory/devel/setup.bash
+
+$ cd name_of_working_directoy/src/teleop/misc
+
+$ ./teleop_joy_client_Kinect.sh

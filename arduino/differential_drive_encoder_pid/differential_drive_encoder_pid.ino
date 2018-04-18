@@ -110,6 +110,7 @@ void servo_cb(const geometry_msgs::Twist& cmd_msg){
     // TODO: engage the brakes here...
     direction_left = STOP;
     direction_right = STOP;
+    //digitalWrite(TRAN, LOW); //Activating the relay to diesngage the breaks. Test out!!!
     
     Serial.print("Stop\n");
   }
