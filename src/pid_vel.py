@@ -28,15 +28,15 @@
 import rospy
 import roslib
 
-from std_msgs.msg import Int16
-#from std_msgs.msg import Float32 # May not need this!
-from std_msgs.msg import Float64
+#from std_msgs.msg import Int16
+from std_msgs.msg import Float32 # This is for encoder info!
+#from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
 from numpy import array
 
 class PidVelocity():
     def __init__(self):
-        rospy.init_node("pid_velocity")
+        #rospy.init_node("pid_velocity")
         self.nodename = rospy.get_name()
         rospy.loginfo("%s started" % self.nodename)
 
@@ -63,7 +63,7 @@ class PidVelocity():
         self.rate = rospy.get_param('~rate',30) # Rate for PID controller. In Hz.
         self.rolling_pts = rospy.get_param('~rolling_pts',2)
         self.timeout_ticks = rospy.get_param('~timeout_ticks',4)
-        self.ticks_per_meter = rospy.get_param('ticks_meter', 20) # Need to calculate this! Should be same number from "Odom_info.py"
+        self.ticks_per_meter = rospy.get_param('ticks_meter', 400) # Need to calculate this! Should be same number from "Odom_info.py"
         self.vel_threshold = rospy.get_param('~vel_threshold', 0.001)
         self.encoder_min = rospy.get_param('encoder_min', -32768) # Need to find what this value actually is
         self.encoder_max = rospy.get_param('encoder_max', 32768) # Need to find what thi value actually is
@@ -75,10 +75,12 @@ class PidVelocity():
         rospy.logdebug("%s got Kp:%0.3f Ki:%0.3f Kd:%0.3f tpm:%0.3f" % (self.nodename, self.Kp, self.Ki, self.Kd, self.ticks_per_meter)) # Prnts the PID gains!
 
         #### subscribers/publishers######################################
-        self.wheel_sub = rospy.Subscriber("wheel", Int16, self.wheelCallback)
-        rospy.Subscriber("wheel_vtarget", Float32, self.targetCallback)
-        self.cmd_vel_sub = rospy.Subscriber("cmd_vel", Float32, self.cmd_vel_Callback) # Coming from joystick
-        self.cmd_vel_ard_pub = rospy.Publisher('cmd_vel_ard', Float64, queue_size=100) # May need to change cmd_vel topic. Going to Arduino
+        #self.wheel_sub = rospy.Subscriber("wheel", Int16, self.wheelCallback)
+        #rospy.Subscriber("wheel_vtarget", Float32, self.targetCallback)
+        self.wheel_sub_right = rospy.Subscriber("right_enc_ticks", Float32, self.wheelCallback)
+        self.wheel_sub_left = rospy.Subscriber("left_enc_ticks",Float32, self.wheelCallback)
+        self.cmd_vel_sub = rospy.Subscriber("cmd_vel", Twist, self.targetCallback) # Coming from joystick. Replaces wheel_vtarget
+        self.cmd_vel_ard_pub = rospy.Publisher('cmd_vel_ard', Twist, queue_size=100) # May need to change cmd_vel topic. Going to Arduino. Replaces wheel_vel
         ## This was part of the originnal code. May not need this!
         #self.pub_motor = rospy.Publisher('motor_cmd',Float32, queue_size=10)
         #self.pub_vel = rospy.Publisher('wheel_vel', Float32, queue_size=10)
@@ -194,7 +196,7 @@ class PidVelocity():
 
 
     #####################################################
-    def wheelCallback(self, msg):
+    def wheelCallback(self, msg): # Will come from arduino code. Contains encoder info
     ######################################################
         enc = msg.data
         if (enc < self.encoder_low_wrap and self.prev_encoder > self.encoder_high_wrap) :
@@ -211,21 +213,23 @@ class PidVelocity():
 #        rospy.logdebug("-D- %s wheelCallback msg.data= %0.3f wheel_latest = %0.3f mult=%0.3f" % (self.nodename, enc, self.wheel_latest, self.wheel_mult))
 
     ######################################################
-    def targetCallback(self, msg):
+    def targetCallback(self, msg): # Should contain linear and angular velocities
     ######################################################
-        self.target = msg.data
+        #self.target = msg.data
+        self.target.linear.x = msg.linear.x # Linear velocity commands
+        self.target.angular.z = msg.angular.z # Angular velocity commands
         self.ticks_since_target = 0
         # rospy.logdebug("-D- %s targetCallback " % (self.nodename))
 
     ######################################################
     def cmd_vel_Callback(self, data):
     ######################################################
-        self.cmd_vel_ard_pub.publish(twist)
+        self.cmd_vel_ard_pub.publish(Twist)
 
-if __name__ == '__main__':
-    """ main """
-    try:
-        pidVelocity = PidVelocity()
-        pidVelocity.spin()
-    except rospy.ROSInterruptException:
-pass
+# if __name__ == '__main__':
+#     """ main """
+#     try:
+#         pidVelocity = PidVelocity()
+#         pidVelocity.spin()
+#     except rospy.ROSInterruptException:
+# pass
