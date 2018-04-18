@@ -57,25 +57,25 @@ int tilt2fwd =  joy.buttons[2];
 
 //Top Motor
     if (tilt1fwd == 1){
-    servo_tilt1.write (88); // tilt fordward
+    servo_tilt1.write (85); // tilt fordward. Originally 88
     delay(1000);
     servo_tilt1.write(90); // pause tilt
   }
 
   if (tilt1bk == 1){
-    servo_tilt1.write (102); // tilt fordward
+    servo_tilt1.write (95); // tilt backward . Originally 102
     delay(1000);
     servo_tilt1.write(90); // pause tilt;
   }
  // Bottom Motor
   if (tilt2fwd == 1){
-    servo_tilt2.write (85); // tilt fordward
+    servo_tilt2.write (85); // tilt fordward. Originally 85
     delay(1000);
     servo_tilt2.write(90); // pause tilt
   }
 
   if (tilt2bk == 1){
-    servo_tilt2.write (98); // tilt fordward
+    servo_tilt2.write (95); // tilt backward. Originally 98
     delay(1000);
     servo_tilt2.write(90); // pause tilt;
   }
