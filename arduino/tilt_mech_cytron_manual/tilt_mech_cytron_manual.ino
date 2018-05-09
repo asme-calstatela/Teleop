@@ -22,6 +22,8 @@
 
 #define dir_1 6 // direction pin
 #define pwm_1 5 // PWM pin
+#define dir_2 4 // direction pin
+#define pwm_2 7 // PWM pin
 #define pot A0 //potentiometer
 
 ros::NodeHandle  nh;
@@ -37,11 +39,13 @@ int pwm_value = 0; // PWM value sent to Cytron
 
 void joydata( const sensor_msgs::Joy& joy) {
   //controls the direction the motor
-  int buttonttilt = 1; //get reading from controller button
-  if (buttontilt ==1){
+  int buttontilt1 = 1; //get reading from controller button
+  int buttontilt2 = 1; //get reading from controller button
+//Low Tilt  
+  if (buttontilt1 ==1 && buttontilt2 ==0){
   reading = analogRead(pot); // reading is equal to the value of telop controller
   // Direction 1
-  if (reading < 500) {
+  if (reading < midCtrl - deadZone) {
     //    Serial.print(reading);
     //    Serial.print(" ");
     pwm_value = map(reading, midCtrl , minCtrlBWD, 0, 255);
@@ -54,15 +58,38 @@ void joydata( const sensor_msgs::Joy& joy) {
     digitalWrite(dir_1, HIGH);
     analogWrite(pwm_1, pwm_value);
   }
-
   // DeadZone do nothing
   else {
     pwm_value = 0;
     analogWrite(pwm_1, pwm_value);
   }
-
   //  Serial.println(pwm_value); //Display the value of PWM
-  delay(10);
+  delay(5);
+}
+// Upper Tilt
+  if (buttontilt2 ==1 && buttontilt1 ==0){
+  reading = analogRead(pot); // reading is equal to the value of telop controller
+  // Direction 1
+  if (reading < midCtrl - deadZone) {
+    //    Serial.print(reading);
+    //    Serial.print(" ");
+    pwm_value = map(reading, midCtrl , minCtrlBWD, 0, 255);
+    digitalWrite(dir_2, LOW);
+    analogWrite(pwm_2, pwm_value);
+  }
+  // Direction 2
+  else if (reading > midCtrl + deadZone) {
+    pwm_value = map(reading, midCtrl, maxCtrlFWD , 0, maxPWM);
+    digitalWrite(dir_2, HIGH);
+    analogWrite(pwm_2, pwm_value);
+  }
+  // DeadZone do nothing
+  else {
+    pwm_value = 0;
+    analogWrite(pwm_2, pwm_value);
+  }
+  //  Serial.println(pwm_value); //Display the value of PWM
+  delay(5);
 }
 }
 
@@ -77,7 +104,6 @@ void setup() {
   nh.initNode();
   nh.subscribe(sub_joy_button);
 }
-
 
 
 void loop() {
