@@ -21,9 +21,9 @@
 #include <sensor_msgs/Joy.h>
 
 #define dir_1 6 // direction pin
-#define pwm_1 5 // PWM pin
-#define dir_2 4 // direction pin
-#define pwm_2 7 // PWM pin
+#define pwm_1 5 // PWM pin MUST be PWM PIN
+#define dir_2 7 // direction pin
+#define pwm_2 4 // PWM pin MUST be PWM PIN
 #define pot A0 //potentiometer
 
 ros::NodeHandle  nh;
