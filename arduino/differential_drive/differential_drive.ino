@@ -56,6 +56,7 @@
 #include <Servo.h>
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
+#include <sensor_msgs/Joy.h>
 
 ros::NodeHandle  nh;
 
@@ -68,6 +69,18 @@ int TRAN = 11; // Sending a signal to the transistor/relay
 Servo servo_left;
 Servo servo_right;
 
+int state_run = 0; // Variable to tell if trigger is pressed
+
+
+void joy_cb(const sensor_msgs::Joy& joy){
+  int hold_buttval = joy.buttons[0]; 
+  if (joy.buttons[0] == 1 && joy.buttons[1] == 0 && joy.buttons[3] == 0) {
+     state_run = 1; // This will activate to get robot to move
+  }
+  else {
+    state_run = 0; // Robot will not drive!!!
+    }
+}
 void servo_cb(const geometry_msgs::Twist& cmd_msg){
   // @param direction_left: speed to be written to the Servos
 
@@ -76,31 +89,37 @@ void servo_cb(const geometry_msgs::Twist& cmd_msg){
 
   float linear = cmd_msg.linear.x;
   float angular = cmd_msg.angular.z;
-
-  if (linear > THRESHOLD || linear < -THRESHOLD) {
-    // Go forward
-    direction_left = int ( STOP * (1 - LEFT_SCALE * linear) );
-    direction_right = int ( STOP * (1 + RIGHT_SCALE * linear) );
+  if (state_run == 1) {
+    if (linear > THRESHOLD || linear < -THRESHOLD) {
+      // Go forward
+      direction_left = int ( STOP * (1 - LEFT_SCALE * linear) );
+      direction_right = int ( STOP * (1 + RIGHT_SCALE * linear) );
     
-    Serial.print("Translate\n");
-  } else if (angular > THRESHOLD || angular < -THRESHOLD) {
+      Serial.print("Translate\n");
+   } else if (angular > THRESHOLD || angular < -THRESHOLD) {
     // Rotate counter clockwise
-    direction_left = int ( STOP * (1 + LEFT_SCALE * angular) );
-    direction_right = int ( STOP * (1 + RIGHT_SCALE * angular) );
+      direction_left = int ( STOP * (1 + LEFT_SCALE * angular) );
+      direction_right = int ( STOP * (1 + RIGHT_SCALE * angular) );
     
-    Serial.print("Rotate\n");
-  } else {
-    // STOP!
+      Serial.print("Rotate\n");
+    } else {
+      // STOP!
 
-    // TODO: engage the brakes here...
+      // TODO: engage the brakes here...
+      direction_left = STOP;
+      direction_right = STOP;
+    
+      Serial.print("Stop\n");
+    }
+
+   if (state_run == 0){
     direction_left = STOP;
     direction_right = STOP;
-    
-    Serial.print("Stop\n");
-  }
+    }
 
   servo_left.write(direction_left); //set servo_left angle
   servo_right.write(direction_right); //set servo_right angle
+  }
 }
 
 ros::Subscriber<geometry_msgs::Twist> sub_cmd_vel("cmd_vel", servo_cb);
