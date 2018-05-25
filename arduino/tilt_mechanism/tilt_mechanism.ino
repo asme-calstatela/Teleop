@@ -34,17 +34,12 @@
 
 ros::NodeHandle  nh;
 
-
-
-
 // use only for tilt arduino
+
 // Top Motor
 Servo servo_tilt1; //bottom tilt motor
 // Bottom Motor
 Servo servo_tilt2; //bottom tilt motor
-
-
-
 
 
 void joydata( const sensor_msgs::Joy& joy){
@@ -53,17 +48,15 @@ int tilt1fwd =  joy.buttons[3];
 int tilt2bk =  joy.buttons[0];
 int tilt2fwd =  joy.buttons[2];
 
-
+//int buttontilt1 = joy.button[1]; // Yellow button
+//int buttontilt2 = joy.button[3]; //   button
 
 //Top Motor
-    if (tilt1fwd == 1){
-<<<<<<< HEAD
+    if (buttontitl1 == 1 && buttontilt2 ==0){ // Yellow buttong pressed and black code
     servo_tilt1.write (85); // tilt fordward. Originally 88
     delay(1000);
-=======
     servo_tilt1.write (88); // tilt fordward. Originally 88. New Value 80
     delay(500);
->>>>>>> cc5a1efdad832788a0cd02adbfffaeaccf0b3bbe
     servo_tilt1.write(90); // pause tilt
   }
 
