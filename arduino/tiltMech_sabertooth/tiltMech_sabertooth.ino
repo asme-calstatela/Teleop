@@ -47,20 +47,19 @@ Servo servo_tilt2; //bottom tilt motor
 
 void joydata( const sensor_msgs::Joy& joy){
     int yellowButton =  joy.buttons[1];
-    // int tilt1fwd =  joy.buttons[3];
-    int blackbutton =  joy.buttons[3];
+    int blackButton =  joy.buttons[3];
+    float joyYAxis = joy.axes[1];
 
-    short joyYAxis = joy.axes[1];
+    // Guard against inputs greater or less than what is expected from the joystick
+    if (joyYAxis > maximumVal) {
+        maximumVal = joyYAxis;
+    }
+    if (joyYAxis < minimumVal) {
+        minimumVal = joyYAxis;
+    }
 
     //Top Motor
-    int writeValue = mapAxis(joyYAxis, minimumVal, maximumVal, 0, 180);
-
-    if (writeValue > maximumVal) {
-        maximumVal = writeValue;
-    }
-    if (writeValue < minimumVal) {
-        minimumVal = writeValue;
-    }
+    int writeValue = mapAxis(joyYAxis, minimumVal, maximumVal);
 
     if (yellowButton == 1){
         servo_tilt1.write (writeValue); // tilt fordward. Originally 88. New Value 80
@@ -68,16 +67,20 @@ void joydata( const sensor_msgs::Joy& joy){
     }
 
      // Bottom Motor
-    else if (blackbutton == 1){
+    else if (blackButton == 1){
         servo_tilt2.write (writeValue); // tilt fordward. Originally 88. New Value 80
         // servo_tilt2.write(90); // pause tilt
+    }
+    else {
+        servo_tilt1.write(90);
+        servo_tilt2.write(90);
     }
 
 }
 
-long mapAxis(float x, int minIn, int maxIn, int minOut, int maxOut)
+long mapAxis(float x, int minIn, int maxIn)
 {
-  return (long)((x - minIn) * (maxOut - minOut) / (maxIn - minIn) + minOut);
+  return (long)((x - minIn) * (30) / (maxIn - minIn)) + 75;
 }
 
 ros::Subscriber<sensor_msgs::Joy> sub_joy_button("joy", joydata);
