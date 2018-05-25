@@ -39,11 +39,12 @@ int pwm_value = 0; // PWM value sent to Cytron
 
 void joydata( const sensor_msgs::Joy& joy) {
   //controls the direction the motor
-  int buttontilt1 = 1; //get reading from controller button
-  int buttontilt2 = 1; //get reading from controller button
+  int buttontilt1 = joy.button[1]; //get reading from controller button
+  int buttontilt2 = joy.button[3]; //get reading from controller button
 //Low Tilt  
   if (buttontilt1 ==1 && buttontilt2 ==0){
   reading = analogRead(pot); // reading is equal to the value of telop controller
+  
   // Direction 1
   if (reading < midCtrl - deadZone) {
     //    Serial.print(reading);
