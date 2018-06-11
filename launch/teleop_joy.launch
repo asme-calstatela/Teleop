@@ -2,10 +2,15 @@
 <launch>
     <!-- Launches the Arduino differential drive ROS node -->
     <!-- Sometimes this one causes issues and won't connect -->
-    <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
+    <node pkg="rosserial_python" type="serial_node.py" name="diff_drive">
         <param name="port" value="/dev/ttyACM0"/>
         <param name="baud" value="57600"/>
     </node>
+
+    <!--node pkg="rosserial_python" type="serial_node.py" name="encoders">
+        <param name="port" value="/dev/ttyACM1"/>
+        <param name="baud" value="57600"/>
+    </node-->
 
     <!-- Launches the key stroke publisher and a new xterm to type in -->
     <node
@@ -18,12 +23,12 @@
     <!-- joy node -->
     <node respawn="true" pkg="joy"
         type="joy_node" name="turtle_joy" >
-        <param name="dev" type="string" value="/dev/input/js1" />
+        <param name="dev" type="string" value="/dev/input/js0" />
         <param name="deadzone" value="0.12" />
     </node>
 
-	<!-- Node for Kinect Bridge -->
+	<!-- Node for Kinect Bridge >
     <node pkg="kinect2_bridge" type="kinect2_bridge" name="kinect2_bridge">
-    </node>
+    </node-->
 
 </launch>
