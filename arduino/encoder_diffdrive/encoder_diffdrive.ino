@@ -5,8 +5,8 @@
 //   Best Performance: both pins have interrupt capability
 //   Good Performance: only the first pin has interrupt capability
 //   Low Performance:  neither pin has interrupt capability
-Encoder Left_enc(2, 3);
-Encoder Right_enc(4, 5); // Change to PIN 18 and 19 for interrupt capability
+Encoder Left_enc(2, 4);
+Encoder Right_enc(3, 5); // Change to PIN 18 and 19 for interrupt capability
 //   avoid using pins with LEDs attached
 
 void setup() {
@@ -19,8 +19,8 @@ long positionRight = -999;
 
 void loop() {
   long newLeft, newRight;
-  newLeft = Left_enc.read(); // Takes about 1593/1606/1591 ticks for one revoution
-  newRight = Right_enc.read(); // Takes about 
+  newLeft = Left_enc.read(); // Takes about 1593/1606/1591/1596 ticks for one revoution
+  newRight = Right_enc.read(); // Takes about 1615/1596
   if (newLeft != positionLeft || newRight != positionRight) {
     Serial.print("Left = ");
     Serial.print(newLeft);
@@ -36,7 +36,7 @@ void loop() {
   if (Serial.available()) {
     Serial.read();
     Serial.println("Reset left and right count to zero");
-    //Left_enc.write(0);
+    Left_enc.write(0);
     Right_enc.write(0);
   }
 }
