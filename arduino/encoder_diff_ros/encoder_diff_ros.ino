@@ -10,13 +10,15 @@
  * 
  * Number of Ticks for One Revolution (360 degrees):
  *                                                    Left Motor: 1593/1606/1591
- *                                                    Right Motor:1330/2600
+ *                                                    Right Motor:1596/1615
  * 
  * 
  * TO RUN:
  *        run 'roscore' on one terminal
  *        run 'rosrun rosserial_python serial_node.py /dev/ttyACMx' on another terminal
  *        Where 'x' is the port number your arduino is connected to
+ *        
+ * NOTE: DO NOT CHANGE PIN ASSIGNMENTS FOR ENCODERS!!!!!!!!!!!!!!!!!!
  */
  
 #include <ros.h>
@@ -31,12 +33,8 @@ std_msgs::Float32 right_enc_msg;
 ros::Publisher left_enc_count("/left_enc_ticks", &left_enc_msg);
 ros::Publisher right_enc_count("/right_enc_ticks", &right_enc_msg);
 
-// Change these two numbers to the pins connected to your encoder.
-//   Best Performance: both pins have interrupt capability
-//   Good Performance: only the first pin has interrupt capability
-//   Low Performance:  neither pin has interrupt capability
-Encoder left_enc(2,3); // Left Encoder
-Encoder right_enc(4,5); // Right Encoder
+Encoder left_enc(2,4); // Left Encoder
+Encoder right_enc(3,5); // Right Encoder
 //   avoid using pins with LEDs attached
 
 void setup() {
@@ -49,8 +47,8 @@ long oldPosition_left  = -999;
 long oldPosition_right = -999;
 
 void loop() {
-  long newPosition_left = left_enc.read();
-  long newPosition_right = right_enc.read();
+  long newPosition_left = left_enc.read(); // + values for cw. - values for ccw
+  long newPosition_right = -1 * right_enc.read(); // + values for cw. - values for ccw
   
   if (newPosition_left != oldPosition_left || newPosition_right != oldPosition_right) {
     
@@ -64,12 +62,7 @@ void loop() {
     right_enc_count.publish( &right_enc_msg);
   }
 
- // if (newPosition_right != oldPosition_right) {
-   // right_enc_msg.data = newPosition_right;
-   // oldPosition_right = newPosition_right;
-   // right_enc_count.publish( &right_enc_msg);
- // }
-  
+
   nh.spinOnce();
   delay(1);
 }
