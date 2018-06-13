@@ -61,7 +61,8 @@
 # Cal State LA Robotics Research Laboratory
 
 import rospy
-import roslib
+#import rospy
+#import roslib
 #roslib.load_manifest('differential_drive') # May not need this one
 from math import sin, cos, pi
 
@@ -70,9 +71,9 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from tf.broadcaster import TransformBroadcaster # To publish the tf information.
 #from std_msgs.msg import Int16 # May not need this one
-from std_msgs.msg import Float64 # The tick counts are stored in Float64 information from Arduino code.
+from std_msgs.msg import Float32 # The tick counts are stored in Float64 information from Arduino code.
 
-class Odom_info():
+class Odom_info(object):
     def __init__(self):
         rospy.init_node("Odom_info")
         self.nodename = rospy.get_name()
@@ -87,8 +88,8 @@ class Odom_info():
         self.base_frame_id = rospy.get_param('~base_frame_id','base_link') # the name of the base frame of the robot.
         self.odom_frame_id = rospy.get_param('~odom_frame_id', 'odom') # the name of the odometry reference frame. May need to create this!
 
-        self.encoder_min = rospy.get_param('encoder_min', -32768) # Need to obtain this through experiment!
-        self.encoder_max = rospy.get_param('encoder_max', 32768) # Need to obtain this through experiment!
+        self.encoder_min = rospy.get_param('encoder_min', -40000) # Need to obtain this through experiment!
+        self.encoder_max = rospy.get_param('encoder_max', 40000) # Need to obtain this through experiment!
         self.encoder_low_wrap = rospy.get_param('wheel_low_wrap', (self.encoder_max - self.encoder_min) * 0.3 + self.encoder_min )
         self.encoder_high_wrap = rospy.get_param('wheel_high_wrap', (self.encoder_max - self.encoder_min) * 0.7 + self.encoder_min )
 
@@ -112,8 +113,8 @@ class Odom_info():
         self.then = rospy.Time.now()
 
         # subscriptions
-        rospy.Subscriber("left_enc_ticks", Float64, self.lwheelCallback) # Can be found in Arduino Code.
-        rospy.Subscriber("right_enc_ticks", Float64, self.rwheelCallback) # Can be found in Arduino Code.
+        rospy.Subscriber("left_enc_ticks", Float32, self.lwheelCallback) # Can be found in Arduino Code.
+        #rospy.Subscriber("right_enc_ticks", Float32, self.rwheelCallback) # Can be found in Arduino Code.
         self.odomPub = rospy.Publisher("odom", Odometry, queue_size=10)
         self.odomBroadcaster = TransformBroadcaster()
 
