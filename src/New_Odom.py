@@ -1,6 +1,60 @@
 #!/usr/bin/env python
 
+# Modified By: Jeovanny Reyes
+# Modified On: 6/5/18
+
 # Note: It takes about 1596 ticks for one complete revolution
+# Inputs: Takes in std_msgs of Float32 from the topics "left_enc_ticks" and
+#          "right_enc_ticks" contain encoder ticks information
+#
+
+# Cal State LA Robotics Laboratory
+
+# DISCLAIMER.
+     # New_Odom.py - follows the output of a wheel encoder and
+    #  creates tf and odometry messages.
+    #   some code borrowed from the arbotix diff_controller script
+    #   A good reference: http://rossum.sourceforge.net/papers/DiffSteer/
+    #
+    #    Copyright (C) 2012 Jon Stephan.
+    #
+    #    This program is free software: you can redistribute it and/or modify
+    #    it under the terms of the GNU General Public License as published by
+    #    the Free Software Foundation, either version 3 of the License, or
+    #    (at your option) any later version.
+    #    This program is distributed in the hope that it will be useful,
+    #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    #    GNU General Public License for more details.
+    #    You should have received a copy of the GNU General Public License
+    #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    #
+    #  ----------------------------------
+    #  Portions of this code borrowed from the arbotix_python diff_controller.
+    #
+    # diff_controller.py - controller for a differential drive
+    #  Copyright (c) 2010-2011 Vanadium Labs LLC.  All right reserved.
+    #  Redistribution and use in source and binary forms, with or without
+    #  modification, are permitted provided that the following conditions are met:
+    #      * Redistributions of source code must retain the above copyright
+    #        notice, this list of conditions and the following disclaimer.
+    #      * Redistributions in binary form must reproduce the above copyright
+    #        notice, this list of conditions and the following disclaimer in the
+    #        documentation and/or other materials provided with the distribution.
+    #      * Neither the name of Vanadium Labs LLC nor the names of its
+    #        contributors may be used to endorse or promote products derived
+    #        from this software without specific prior written permission.
+    #
+    #  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    #  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    #  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    #  DISCLAIMED. IN NO EVENT SHALL VANADIUM LABS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    #  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+    #  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+    #  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    #  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+    #  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+    #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import rospy
 #import rospy
@@ -12,7 +66,6 @@ from geometry_msgs.msg import Quaternion # To store the linear and angular veloc
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from tf.broadcaster import TransformBroadcaster # To publish the tf information.
-#from std_msgs.msg import Int16 # May not need this one
 from std_msgs.msg import Float32 # The tick counts are stored in Float64 information from Arduino code.
 
 class Odom_info(object):
@@ -47,11 +100,11 @@ class Odom_info(object):
         self.rmult = 0
         self.prev_lencoder = 0
         self.prev_rencoder = 0
-        self.x = 0                  # position in xy plane
+        self.x = 0                  # position in xy plane. Vertical Axis(x) Horizontal Axis (y). Right Hand Rule
         self.y = 0
         self.th = 0
-        self.dx = 0                 # speeds in x/rotation
-        self.dr = 0
+        self.dx = 0                 # Speed of linear travel
+        self.dr = 0                 # Speed of angular rotation
         self.then = rospy.Time.now()
 
         # subscriptions
