@@ -1,26 +1,26 @@
 # !/usr/bin/env python
 
-#   pid_velocity - takes messages on wheel_vtarget
-#      target velocities for the wheels and monitors wheel for feedback
-
-# Copyright (C) 2012 Jon Stephan.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# DISCLAIMER.
+    #   pid_velocity - takes messages on wheel_vtarget
+    #      target velocities for the wheels and monitors wheel for feedback
+    # Copyright (C) 2012 Jon Stephan.
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Modified By: Jeovanny Reyes
-# Modified On: 12/23/17
+# Modified On: 6/3/18
 
-# Inputs: Takes in std_msgs from the topic "cmd_vel"
-# outputs: Outputs to the topic "cmd_vel" for the arduino to drive
+# Inputs: Takes in std_msgs from the topic "cmd_vel" (Ranges from -1 to 1 for forward,back,left and right)
+# outputs: Outputs to the topic "cmd_vel_ard" for the arduino to drive
 
 # Cal State LA Robotics Research Laboratory
 
@@ -30,13 +30,12 @@ import roslib
 
 #from std_msgs.msg import Int16
 from std_msgs.msg import Float32 # This is for encoder info!
-#from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
 from numpy import array
 
-class PidVelocity():
+class PidVelocity(object):
     def __init__(self):
-        #rospy.init_node("pid_velocity")
+        rospy.init_node("pid_velocity")
         self.nodename = rospy.get_name()
         rospy.loginfo("%s started" % self.nodename)
 
@@ -63,7 +62,7 @@ class PidVelocity():
         self.rate = rospy.get_param('~rate',30) # Rate for PID controller. In Hz.
         self.rolling_pts = rospy.get_param('~rolling_pts',2)
         self.timeout_ticks = rospy.get_param('~timeout_ticks',4)
-        self.ticks_per_meter = rospy.get_param('ticks_meter', 400) # Need to calculate this! Should be same number from "Odom_info.py"
+        self.ticks_per_meter = rospy.get_param('ticks_meter', 2080) # Need to calculate this! Should be same number from "Odom_info.py"
         self.vel_threshold = rospy.get_param('~vel_threshold', 0.001)
         self.encoder_min = rospy.get_param('encoder_min', -40000) # Need to find what this value actually is. Originally 32768
         self.encoder_max = rospy.get_param('encoder_max', 40000) # Need to find what thi value actually is.Originally 32768
@@ -226,7 +225,8 @@ class PidVelocity():
     ######################################################
         self.cmd_vel_ard_pub.publish(Twist)
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    PIDVelocity()
 #     """ main """
 #     try:
 #         pidVelocity = PidVelocity()
