@@ -1,0 +1,61 @@
+<launch>
+		<!-- Vision -->
+		<node name="image_view" pkg="image_view" type="image_view" respawn="false" output="screen">
+				<remap from="image" to="/kinect2/qhd/image_color_rect" />
+				<param name="~image_transport" value="compressed" />
+		</node>
+
+
+    <!-- Differential (diff & tilt)-->
+    <node
+        pkg="teleop"
+        type="teleop_joy.py"
+        name="joystick_driver"
+    />
+
+
+    <!-- joy node (diff & tilt))-->
+    <node respawn="true" pkg="joy"
+        type="joy_node" name="turtle_joy" >
+        <param name="dev" type="string" value="/dev/input/js0" />
+        <param name="deadzone" value="0.12" />
+    </node>
+
+		<!-- Odometry Node (enc)-->
+		<node
+			pkg="teleop"
+			type="New_Odom.py"
+			name="Odometry_node"
+		/>
+
+
+    <!-- Launches the key stroke publisher and a new xterm to type in -->
+    <!--node
+        pkg="teleop"
+        type="key_publisher.py"
+        name="keyboard_driver"
+        launch-prefix="xterm -e"
+        respawn="true"
+    />
+
+    <!-- Launches the key to twist publisher -->
+    <!--node
+        pkg="teleop"
+        type="keys_to_twist.py"
+        name="keys_to_twist"
+        required="true"
+    /-->
+<!--
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFL1_tf" args="1 1 0 1.5708 0 0 base_link USFL1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFL2_tf" args="1 1 0 0.79698 0 0 base_link USFL2" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFR1_tf" args="1 -1 0 -0.79698 0 0 base_link USFR1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFR2_tf" args="1 -1 0 -1.5708 0 0 base_link USFR2" />
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="USBL1_tf" args="-1 1 0 1.5708 0 0 base_link USBL1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USBL2_tf" args="-1 1 0 2.35619 0 0 base_link USBL2" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USSB1_tf" args="-1 -1 0 -2.35619 0 0 base_link USBR1" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="USFB2_tf" args="-1 -1 0 -1.5708 0 0 base_link USBR2" />
+-->
+
+
+</launch>
