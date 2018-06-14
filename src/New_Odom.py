@@ -1,5 +1,6 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 
+# Note: It takes about 1596 ticks for one complete revolution
 
 import rospy
 #import rospy
@@ -22,7 +23,7 @@ class Odom_info(object):
 
         #### parameters #######
         self.rate = rospy.get_param('~rate',10.0)  # the rate at which to publish the transform in Hz
-        self.ticks_meter = float(rospy.get_param('ticks_meter', 50))  # The number of wheel encoder ticks per meter of travel
+        self.ticks_meter = float(rospy.get_param('ticks_meter', 2080))  # The number of wheel encoder ticks per meter of travel
         self.base_width = float(rospy.get_param('~base_width', 0.5207)) # The wheel base width in meters. Distance from center of left wheel to right wheel.
         # Wheel distance: 20.5 inches
 
@@ -55,9 +56,13 @@ class Odom_info(object):
 
         # subscriptions
         rospy.Subscriber("left_enc_ticks", Float32, self.lwheelCallback) # Can be found in Arduino Code.
-        #rospy.Subscriber("right_enc_ticks", Float32, self.rwheelCallback) # Can be found in Arduino Code.
-        self.odomPub = rospy.Publisher("odom", Odometry, queue_size=10)
+        rospy.Subscriber("right_enc_ticks", Float32, self.rwheelCallback) # Can be found in Arduino Code.
+        self.odomPub = rospy.Publisher("odom", Odometry, queue_size=100)
+        self.lin_vel = rospy.Publisher("lin_vel", Float32, queue_size = 100) # Publishes the linear velocity in m/sec
+        self.ang_vel = rospy.Publisher("ang_vel", Float32, queue_size = 100) # Publishes the angular velocity in m/sec
         self.odomBroadcaster = TransformBroadcaster()
+        print("Made it past subscriptions")
+        self.spin()
 
     def spin(self): # To keep things running.
         r = rospy.Rate(self.rate)
@@ -77,9 +82,11 @@ class Odom_info(object):
                 d_left = 0
                 d_right = 0
             else:
-                d_left = (self.left - self.enc_left) / self.ticks_meter
-                d_right = (self.right - self.enc_right) / self.ticks_meter
-            self.enc_left = self.left
+                d_left = (self.left - self.enc_left) / self.ticks_meter # Current minus previous
+                d_right = (self.right - self.enc_right) / self.ticks_meter # Current minues prvious
+            rospy.loginfo(d_left)
+            rospy.loginfo(d_right)
+            self.enc_left = self.left # Current data gets assigned as old data for next iteration
             self.enc_right = self.right
 
             # distance traveled is the average of the two wheels
@@ -87,8 +94,31 @@ class Odom_info(object):
             # this approximation works (in radians) for small angles
             th = ( d_right - d_left ) / self.base_width
             # calculate velocities
-            self.dx = d / elapsed # Linear Velocity
-            self.dr = th / elapsed # Angular Velocity
+            if (d_left == 0 and d_right == 0): # Wheels Not Moving
+                self.dx = 0
+                self.dr = 0
+                print("Melo Not Moving!")
+            elif ((d_left == 0 and d_right != 0) or (d_left < 0 and d_right > 0)): # Right Wheel moving only or Right going forward and left going backward
+                self.dx = 0 # Linear Velocity (zero)
+                self.dr = th / elapsed
+                print("Rotating Left")
+            elif ((d_left !=0 and d_right ==0) or (d_left > 0 and d_right < 0)): # Left Wheel Moving only or Left Wheel Moving forward and right going backward
+                self.dx = 0
+                self.dr = th / elapsed
+                print("Rotating Right")
+            elif (d_left > 0 and d_right >0): # Positive Distance
+                self.dx = d / elapsed # Linear Velocity (+)
+                self.dr = 0
+                print("Melo Moving Forward")
+            elif(d_left < 0 and d_right < 0): # Negative Distance
+                self.dx = d / elapsed # Linear Velocity (-)
+                self.dr = 0
+                print("Melo Moving Backward")
+
+            #self.dx = d / elapsed # Linear Velocity
+            #self.dr = th / elapsed # Angular Velocity
+            self.lin_vel.publish(self.dx) # Publishes linear velocity in m/sec
+            self.ang_vel.publish(self.dr) # Publishes the angular velocity in m/sec
 
 
             if (d != 0):
@@ -96,8 +126,8 @@ class Odom_info(object):
                 x = cos( th ) * d
                 y = -sin( th ) * d
                 # calculate the final position of the robot
-                self.x = self.x + ( cos( self.th ) * x - sin( self.th ) * y )
-                self.y = self.y + ( sin( self.th ) * x + cos( self.th ) * y )
+                self.x = self.x + ( cos( self.th ) * x - sin( self.th ) * y ) # Distance gets add on
+                self.y = self.y + ( sin( self.th ) * x + cos( self.th ) * y ) # Distance gets add on
             if( th != 0):
                 self.th = self.th + th
 
@@ -154,9 +184,10 @@ class Odom_info(object):
 #############################################################################
 #############################################################################
 if __name__ == '__main__':
-    """ main """
-    try:
-        odominf = Odom_info()
-        odominf.spin()
-    except rospy.ROSInterruptException:
-pass
+    Odom_info()
+    #""" main """
+    #try:
+    #    odominf = Odom_info()
+    #    odominf.spin()
+    #except rospy.ROSInterruptException:
+#pass
