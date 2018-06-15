@@ -57,9 +57,6 @@
     #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import rospy
-#import rospy
-#import roslib
-#roslib.load_manifest('differential_drive') # May not need this one
 from math import sin, cos, pi
 
 from geometry_msgs.msg import Quaternion # To store the linear and angular velocity information
