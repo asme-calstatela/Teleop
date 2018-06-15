@@ -2,6 +2,8 @@
  * Created By: Jeovanny Reyes
  * Created On: 4/15/18
  * 
+ * Modified On: 6/13/18
+ * 
  * Input: Channel A and Channel B (From both Left and Right DC Motors)
  * Output: Tick numbers for Left and Right DC Motor
  * 
