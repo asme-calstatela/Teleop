@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   sensor_msgs
+  dynamic_reconfigure
 )
 
 ## System dependencies are found with CMake's conventions
@@ -87,10 +88,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
+ generate_dynamic_reconfigure_options(
 #   cfg/DynReconf1.cfg
 #   cfg/DynReconf2.cfg
-# )
+    cfg/diff_drive_con.cfg
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -104,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES teleop
-#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
+#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs dynamic_reconfigure
 #  DEPENDS system_lib
 )
 
@@ -128,9 +130,11 @@ include_directories(
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
 # add_dependencies(teleop ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(diff_drive_server)
 
 ## Declare a C++ executable
 # add_executable(teleop_node src/teleop_node.cpp)
+add_executable(diff_drive_server /home/jeo/new_teleop/src/teleop/src/diff_drive_server.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -140,6 +144,7 @@ include_directories(
 # target_link_libraries(teleop_node
 #   ${catkin_LIBRARIES}
 # )
+target_link_libraries(diff_drive_server ${catkin_LIBRARIES})
 
 #############
 ## Install ##
