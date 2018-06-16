@@ -108,6 +108,8 @@ class Odom_info(object):
         rospy.Subscriber("left_enc_ticks", Float32, self.lwheelCallback) # Can be found in Arduino Code.
         rospy.Subscriber("right_enc_ticks", Float32, self.rwheelCallback) # Can be found in Arduino Code.
         self.odomPub = rospy.Publisher("odom", Odometry, queue_size=100)
+        self.left_lin_vel = rospy.Publisher("left_lin_vel", Float32, queue_size = 100) # Publishes the velocity of the left wheel
+        self.right_lin_vel = rospy.Publisher("right_lin_vel", Float32, queue_size = 100) # Publishes the velocity of the right wheel
         self.lin_vel = rospy.Publisher("lin_vel", Float32, queue_size = 100) # Publishes the linear velocity in m/sec
         self.ang_vel = rospy.Publisher("ang_vel", Float32, queue_size = 100) # Publishes the angular velocity in m/sec
         self.odomBroadcaster = TransformBroadcaster()
@@ -142,8 +144,11 @@ class Odom_info(object):
             # distance traveled is the average of the two wheels
             d = ( d_left + d_right ) / 2
             # this approximation works (in radians) for small angles
-            th = ( d_right - d_left ) / self.base_width
+            th = ( d_right - d_left ) / self.base_width # Calculates difference of the angles
             # calculate velocities
+            # First calculate speed of each wheel independently:
+            self.left_dx = d_left / elapsed
+            self.right_dx = d_right / elapsed
             if (d_left == 0 and d_right == 0): # Wheels Not Moving
                 self.dx = 0
                 self.dr = 0
@@ -167,6 +172,8 @@ class Odom_info(object):
 
             #self.dx = d / elapsed # Linear Velocity
             #self.dr = th / elapsed # Angular Velocity
+            self.left_lin_vel.publish(self.left_dx) # Publishes the linear velocity of the left wheel in m/sec
+            self.right_lin_vel.publish(self.right_dx) # Publishes the linear velocity of the right wheel in m/sec
             self.lin_vel.publish(self.dx) # Publishes linear velocity in m/sec
             self.ang_vel.publish(self.dr) # Publishes the angular velocity in m/sec
 
