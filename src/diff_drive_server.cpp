@@ -1,3 +1,13 @@
+/*
+  Created By: Jeovanny Reyes
+  Created On: 6/5/18
+
+  Server file containing 4 constantly updated parameters
+
+  Cal State LA Robotics Laboratory
+
+*/
+
 #include <ros/ros.h>
 
 #include <dynamic_reconfigure/server.h>
