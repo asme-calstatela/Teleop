@@ -7,12 +7,11 @@
  * This is an
  * adaptation of:
  * www.ros.org/wiki/rosserial_arduino_demos
- * and some code is taken from the "PID Basic" Example and the Encoder "Two_Knobs" Example
  * 
- *  Error Calculation: Error = Setpoint - Input
- *  Setpoint: Velocity of Left Wheel
- *  Input: Velocity coming from Right Wheel
- *  Output: Velocity calculated outputed to right wheel to match left wheel
+ * To run:
+ *        Run 'roscore'
+ *        Run 'rosrun rosserial_python serial_node.py /dev/ttyACMx'
+ * This method uses dynamic reconfiguration
  ********************************************************/
 
 #if (ARDUINO >= 100)
@@ -27,8 +26,14 @@
 #include <std_msgs/Float32.h> // Velocity Info From Odom code
 #include <sensor_msgs/Joy.h> // Used for info about joystick buttons
 #include <dynamic_reconfigure/Config.h> // Updated values for velocity scaling
+//#include <rosserial_arduino/Test.h>
 
 ros::NodeHandle nh;
+//using rosserial_arduino::Test;
+
+////////////////////////////////// SERVICES //////////////////////////////////////////////////////////////
+//ros::ServiceClient<Test::Request, Test::Response> client("/diff_drive_server_node"); // then try /update_parameters
+//////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////// PUBLISHERS //////////////////////////////////////////////
 std_msgs::Float32 left_wheel_msg;
@@ -55,6 +60,8 @@ int state_run = 0; //Variable to tell if trigger is pressed to have Melo move!
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////// CALLBACKS /////////////////////////////////////////////////
+//void vel_scales(const 
+
 void joydata(const sensor_msgs::Joy& joy){
   int hold_buttval = joy.buttons[0]; 
   if (joy.buttons[0] == 1 && joy.buttons[1] == 0 && joy.buttons[3] == 0) {
@@ -66,8 +73,13 @@ void joydata(const sensor_msgs::Joy& joy){
 }
 
 void vel_scale_cb(const dynamic_reconfigure::Config& scale_val){
-   float LEFT_SCALE = scale_val.doubles.value[1]; // Check to see if this is correct
-   float RIGHT_SCALE = scale_val.doubles_length; // Check to see if this correct
+   //float LEFT_SCALE = scale_val.doubles.value]; // Check to see if this is correct
+   //float RIGHT_SCALE = scale_val.doubles_length; // Check to see if this correct
+   //left_wheel_msg.data = LEFT_SCALE; 
+   //left_wheel_msg.data = RIGHT_SCALE;
+
+   //motor_signal1.publish( &left_wheel_msg); // left scaling
+   //motor_signal2.publish( &right_wheel_msg); // right scaling
 }
 
 void servo_cb(const geometry_msgs::Twist& cmd_msg){
@@ -76,7 +88,7 @@ void servo_cb(const geometry_msgs::Twist& cmd_msg){
   int direction_right = STOP;
 
   double linear = cmd_msg.linear.x;
-  double angular = cmd_msg.linear.z;
+  double angular = cmd_msg.angular.z;
   
   if (state_run == 1) { // If trigger on joystick is pressed
     if (linear > THRESHOLD || linear < -THRESHOLD) {
@@ -135,6 +147,7 @@ ros::Subscriber<dynamic_reconfigure::Config> sub_vel_scale("diff_drive_server_no
 void setup()
 {
   nh.initNode();
+  //nh.serviceClient(client);
   nh.subscribe(sub_cmd_vel); // Subscribing to joystick movements
   nh.subscribe(sub_joy_button); // Subscribing to state info about joystick buttons
   nh.subscribe(sub_vel_scale); // Dyanmically reconfigured velcity values
@@ -142,6 +155,7 @@ void setup()
   //nh.subscribe(sub_right_lin_vel); // Subscribing to velocity of right wheel
   nh.advertise(motor_signal1); // Info about left motor command
   nh.advertise(motor_signal2); // Infor about right motor command
+  //while(!nh.connected()) nh.spinOnce();
 
   servo_left.attach(8); // Attach it to pin 8
   servo_right.attach(9); // Attach it to pin 9
@@ -151,6 +165,14 @@ void setup()
 
 void loop()
 {
+  //Test::Request req; // May not need this
+  //Test::Response res; 
+  //req.input = LEFT_SCALE; // Dont need this
+  //client.call(req,res);
+  //client.call(res);
+  //LEFT_SCALE= res.output
+  //str_msg.data = res.output; //May not need this
+  
   digitalWrite(TRAN, HIGH); // Activating the relay to disengage the breaks!
   nh.spinOnce(); // Handles ALL Callbacks
   
