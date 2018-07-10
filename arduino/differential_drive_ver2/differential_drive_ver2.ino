@@ -73,7 +73,7 @@ void joydata(const sensor_msgs::Joy& joy){
 }
 
 void vel_scale_cb(const dynamic_reconfigure::Config& scale_val){
-   float LEFT_SCALE = scale_val.doubles.value; // Check to see if this is correct
+   //float LEFT_SCALE = scale_val.doubles.value; // Check to see if this is correct
    float RIGHT_SCALE = scale_val.doubles_length; // Check to see if this correct
    //left_wheel_msg.data = LEFT_SCALE; 
    //left_wheel_msg.data = RIGHT_SCALE;
