@@ -6,7 +6,7 @@
         <param name="baud" value="57600"/>
     </node>
 
-    <!-- Launches the master Arduino right arm ROS node -->
+    <!-- Launches the master Arduino left arm ROS node -->
     <node pkg="rosserial_python" type="serial_node.py" name="right_arm_master">
         <param name="port" value="/dev/ttyACM1"/>
         <param name="baud" value="57600"/>
@@ -22,15 +22,19 @@
     <!-- joy node for left arm -->
     <node respawn="true" pkg="joy"
         type="joy_node" name="left_arm_joy" >
-        <param name="dev" type="string" value="/dev/input/js0" />
-        <param name="deadzone" value="0.12" />
-    </node>
-
-    <!-- joy node for righct arm -->
-    <node respawn="true" pkg="joy"
-        type="joy_node" name="right_arm_joy" >
         <param name="dev" type="string" value="/dev/input/js1" />
         <param name="deadzone" value="0.12" />
     </node>
+
+    <remap from="joy" to="left_joy"/>
+
+
+    <!-- joy node for righct arm -->
+    <node respawn="true" pkg="joy"
+        type="joy_node" name="right_arm_joy_node" >
+        <param name="dev" type="string" value="/dev/input/js2" />
+        <param name="deadzone" value="0.12" />
+    </node>
+
 
 </launch>
