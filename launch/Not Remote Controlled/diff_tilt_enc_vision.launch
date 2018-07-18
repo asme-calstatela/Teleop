@@ -44,11 +44,11 @@
 		/>
 
 
-	<!-- Node for Kinect Bridge (Vision) -->
+	<!-- Node for Kinect Bridge (Vision) >
     <node pkg="kinect2_bridge" type="kinect2_bridge" name="kinect2_bridge">
-    </node>
+    </node-->
 
-    <!-- Call the 2D Laser and Mapping launch file-->
-		<include file="$(find teleop)/launch/kinect_odom_2dlaser.launch"/>
+    <!-- Call the 2D Laser and Mapping launch file>
+		<include file="$(find teleop)/launch/kinect_odom_2dlaser.launch"/-->
 
 </launch>
