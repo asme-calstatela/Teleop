@@ -151,8 +151,8 @@ void setup(){
   nh.advertise(motor_signal1);
   nh.advertise(motor_signal2);
 
-  servo_left.attach(8); //attach it to pin 8
-  servo_right.attach(9); //attach it to pin 9
+  servo_left.attach(9); //attach it to pin 8
+  servo_right.attach(10); //attach it to pin 9
  
  pinMode(TRAN, OUTPUT);
 }
