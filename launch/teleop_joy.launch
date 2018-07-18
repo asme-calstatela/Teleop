@@ -22,8 +22,13 @@
     <!-- Launches the key to twist publisher -->
     <!-- joy node -->
     <node respawn="true" pkg="joy"
+<<<<<<< HEAD
         type="joy_node" name="turtle_joy" >
         <param name="dev" type="string" value="/dev/input/js0" />
+=======
+        type="joy_node" name="joystick_node" >
+        <param name="dev" type="string" value="/dev/input/js1" />
+>>>>>>> 735acdbd3a6667bc67f23921ce814aebb038b09e
         <param name="deadzone" value="0.12" />
     </node>
 
