@@ -92,7 +92,7 @@ void setup(){
 
 // use only for tilt mechanism
   servo_tilt1.attach(10); // attach it to pin 10 for tilt
-  servo_tilt2.attach(11); // attach it to pin 11 for tilt
+  servo_tilt2.attach(12); // attach it to pin 11 for tilt
   servo_tilt2.write (90); // pause tilt
   servo_tilt1.write (90); // pause tilt
 
