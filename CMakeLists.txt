@@ -134,7 +134,7 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(teleop_node src/teleop_node.cpp)
-add_executable(diff_drive_server /home/salrojas9/melo/src/teleop/src/diff_drive_server.cpp)
+add_executable(diff_drive_server /home/teleoperation/teleop1/src/teleop/src/diff_drive_server.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
