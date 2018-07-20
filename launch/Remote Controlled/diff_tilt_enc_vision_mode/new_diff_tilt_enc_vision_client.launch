@@ -36,7 +36,7 @@
         name="keyboard_driver"
         launch-prefix="xterm -e"
         respawn="true"
-    />
+    /-->
 
     <!-- Launches the key to twist publisher -->
     <!--node
