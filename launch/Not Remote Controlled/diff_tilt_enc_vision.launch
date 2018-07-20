@@ -34,7 +34,6 @@
         <param name="dev" type="string" value="/dev/input/js0" />
         <param name="deadzone" value="0.12" />
     </node>
-
     <!-- Odometry Node (enc)-->
     <!-- Calculates linear and angular velocities and position and outputs tf-->
 		<node
@@ -44,9 +43,9 @@
 		/>
 
 
-	<!-- Node for Kinect Bridge (Vision) >
+	<!-- Node for Kinect Bridge (Vision) -->
     <node pkg="kinect2_bridge" type="kinect2_bridge" name="kinect2_bridge">
-    </node-->
+    </node>
 
     <!-- Call the 2D Laser and Mapping launch file>
 		<include file="$(find teleop)/launch/kinect_odom_2dlaser.launch"/-->
