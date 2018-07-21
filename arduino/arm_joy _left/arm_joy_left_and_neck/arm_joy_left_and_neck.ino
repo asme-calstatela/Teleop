@@ -1,6 +1,8 @@
 #include <Servo.h>
 #include <ros.h>
 #include <sensor_msgs/Joy.h>
+#include <Arduino.h>
+#include "DRV8825.h"
 
 ros::NodeHandle nh;
 
@@ -31,6 +33,23 @@ int old_pos1_neck = 90;
 int old_pos2_neck = 90;
 int old_pos3_neck = 90;
 
+#define MOTOR_STEPS 200
+#define RPM 120
+
+#define DIR 5
+#define STEP 6
+#define MODE0 9
+#define MODE1 8
+#define MODE2 7
+DRV8825 stepper(MOTOR_STEPS, DIR, STEP, MODE0, MODE1, MODE2);
+
+#define DIR2 14
+#define STEP2 15
+#define MODE02 18
+#define MODE12 17
+#define MODE22 16
+DRV8825 stepper2(MOTOR_STEPS, DIR2, STEP2, MODE02, MODE12, MODE22);
+
 Servo esc1;
 Servo esc2;
 Servo esc3;
@@ -39,6 +58,7 @@ Servo servo1, servo2, servo3;
 void joydata(const sensor_msgs::Joy& joy){
   int joy_butt = joy.buttons[2]; // Trigger to move servos 1 and 2
   int joy_yellow = joy.buttons[1]; // yellow button to move servos 1 and 2
+  int joy_trig = joy.buttons[0];
   float joy_fb = joy.axes[1]; // forward and backward
   float joy_lr = joy.axes[0]; // left and right
   float joy_servo3 = joy.axes[4]; // small black joystick. Up is +1
@@ -104,6 +124,27 @@ esc1.writeMicroseconds(new_pos1);
 esc2.writeMicroseconds(new_pos2);
 esc3.writeMicroseconds(new_pos3);
 
+if (joy_trig == 1){
+   if (joy_fb > 0) {
+      stepper.move(MOTOR_STEPS);
+      delay(1);
+    }
+    else if (joy_fb < 0) {
+      stepper.move(-MOTOR_STEPS);
+    }
+    else if (joy_lr > 0) {
+      stepper2.move(MOTOR_STEPS);
+      delay(1);
+    }
+    else if (joy_lr < 0) {
+      stepper2.move(-MOTOR_STEPS);
+    }
+    else {
+      stepper.move(0);
+      stepper2.move(0);
+    }
+}
+
 }
 
 
@@ -116,7 +157,9 @@ void setup(){
  // nh,advertise(esc_pos1);
   //nh.advertise(esc_pos2);
   //nh.advertise(esc_pos3);
-  
+
+  stepper.begin(RPM);
+  stepper.enable();
 
 // use only for tilt mechanism
   esc1.attach(2); // attach it to pin 10 for tilt
