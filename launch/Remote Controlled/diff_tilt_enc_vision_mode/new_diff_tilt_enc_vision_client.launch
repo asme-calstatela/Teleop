@@ -21,6 +21,16 @@
         <param name="deadzone" value="0.12" />
     </node>
 
+    <!-- To avoid confusion of data between the two joysticks-->
+    <remap from="joy" to="left_joy"/>
+
+    <!-- joy node (diff & tilt) (RIGHT ARM) -->
+    <node respawn="true" pkg="joy"
+        type="joy_node" name="turtle_joy" >
+        <param name="dev" type="string" value="/dev/input/js1" />
+        <param name="deadzone" value="0.12" />
+    </node>
+
 		<!-- Odometry Node (enc)-->
 		<node
 			pkg="teleop"
