@@ -16,7 +16,7 @@
 
     <!-- joy node (diff & tilt))-->
     <node respawn="true" pkg="joy"
-        type="joy_node" name="turtle_joy" >
+        type="joy_node" name="left_joy" >
         <param name="dev" type="string" value="/dev/input/js0" />
         <param name="deadzone" value="0.12" />
     </node>
@@ -26,7 +26,7 @@
 
     <!-- joy node (diff & tilt) (RIGHT ARM) -->
     <node respawn="true" pkg="joy"
-        type="joy_node" name="turtle_joy" >
+        type="joy_node" name="right_joy" >
         <param name="dev" type="string" value="/dev/input/js1" />
         <param name="deadzone" value="0.12" />
     </node>
